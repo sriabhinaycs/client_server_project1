@@ -1,0 +1,274 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css"/>
+<style>
+	#maindiv{
+		width: 100%;
+		display: table;
+		border-collapse: collapse;
+	}
+	 #mainContainer{
+		display: table-row;	
+		border: 1pt solid grey;
+	}
+	#sid1, #sid2, #sid3{
+		display: table-cell;
+		width: fit-content;
+	} 
+</style>
+
+<script type = "text/javascript">
+
+// function to call mask.php, validation for mask weared or not
+function maskfn(url) {
+  request = new XMLHttpRequest();
+  request.open("GET","mask.php?url="+url);
+
+  request.onreadystatechange = function () {
+     if (request.readyState == 4)
+         my_callback();
+  
+   }
+  request.send();
+
+} 
+// function to call lysol.php, validation for lysol is used or not
+function lysolfn(url) {
+  request = new XMLHttpRequest();
+  request.open("GET","lysol.php?url="+url);
+
+  request.onreadystatechange = function () {
+     if (request.readyState == 4)
+         my_callback();
+  
+   }
+  request.send();
+
+}
+// function to call sanitisor.php, validation for sanitiser used or not
+function sanitisorfn(url) {
+  request = new XMLHttpRequest();
+  request.open("GET","sanitisor.php?url="+url);
+
+  request.onreadystatechange = function () {
+     if (request.readyState == 4)
+         my_callback();
+  
+   }
+  request.send();
+
+}
+// function to call socaildistance.php, validation for following socail distancing protocols
+function deskfn(url){
+	request = new XMLHttpRequest();
+  request.open("GET","socialdistance.php?url="+url);
+
+  request.onreadystatechange = function () {
+     if (request.readyState == 4)
+         my_callback();
+  
+   }
+  request.send();
+}
+
+// function to recieve response from the server 
+function my_callback() {
+if (request.status == 200) {
+	if(request.responseText.length > 1){
+		console.log(request.responseText)
+ alert(request.responseText);}
+}
+else if (request.status=404) {
+
+alert("Server was not found: data returned is :\n"+request.responseText);
+
+}
+}
+
+// function to start a class. THIS FUNCTION INCLUDES ALL THE HTML CODE WRAPPED IN A FOR LOOP, TO USE MULTIPLE TIMES. (html code reusablity).
+function classstart(str){
+	document.getElementById(str).style.display="block";
+	document.getElementById(str+"-end").style.display="none";
+	let studArr=[1,2,3,4,5];
+	var classHtml='<label>Instructor: </label><label>Do you have a mask/face shield: </label><input type="button" name="maskon" value="yes" onclick=maskfn(this.value)></input><label style="color:white">- -</label><input type="button" name="maskoff" value="no" onclick=maskfn(this.value)></input><label style="color:white">- - -</label><label>Lysol used: </label><input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input><label style="color:white">- -</label><input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)></input></form><br/>';
+	for(s in studArr){
+	classHtml += '<br/><div id="maindiv"><div id="mainContainer"><div id="sid1"><label>Student' +studArr[s]+' :</label></div><div id="sid2"><label>Do you have a mask: </label><label style="color:white";>---</label><input type="button" name="maskon" value="yes" onclick=maskfn(this.value)></input><label style="color:white";>---</label><input type="button" name="maskoff" value="no" onclick=maskfn(this.value)></input></div><div id="sid3"><label style="color:white";>---</label><label for="desk">Choose a rectangle:</label><select name="desk" id="desk" value=this.value onchange=deskfn(this.value)>        <option value="none" selected disabled hidden>Select an Option</option> <option value="'+str+'Qbox">questionnaire box</option><option value="'+str+'one">desk1</option><option value="'+str+'two">desk2</option><option value="'+str+'three">desk3</option><option value="'+str+'four">desk4</option><option value="'+str+'five">desk5</option></select></div><div id="sid4"><label>Lysol used: </label><label style="color:white";>---</label><input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input><label style="color:white";>---</label><input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)></input></div></div></div>';
+	}
+	document.getElementById("main-"+str).innerHTML=classHtml;
+}
+
+// function to end a class. THIS FUNCTION INCLUDES ALL THE HTML CODE WRAPPED IN A FOR LOOP, TO USE MULTIPLE TIMES. (html code reusablity).
+function classend(str){
+	document.getElementById(str).style.display="none";
+	document.getElementById(str+"-end").style.display="block";
+	let studArr=[1,2,3,4,5];
+	var studentHtml = '<label>Class has been ended.</label><br/><label>Everyone are supposed to use hand sanitizer and lysol before leaving the class.</label><br/><p></p>';
+	for(s in studArr){
+		 studentHtml += '<label id="s' +studArr[s] +'-leave"><label>Student' +studArr[s]+ ':</label><label style="color:white";>---</label><label>Lysol used: </label><input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input><input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)><label style="color:white";>------</label><label>Sanitisor used: </label><input type="button" name="sanitisorused" value="yes" onclick=sanitisorfn(this.value)><input type="button" name="sanitisornotused" value="no" onclick=sanitisorfn(this.value)></input><label style="color:white";>----</label><input type="button" name="s' +studArr[s]+ '-leave" value="Leave the class" onclick="s1leavefn(this.name);"></input></label></br>'
+	}
+	document.getElementById(str+'-end').innerHTML = studentHtml;
+
+}
+//function for a student to leave a class
+function s1leavefn(str){
+	document.getElementById(str).style.display="none";
+}
+
+</script>
+
+
+</head>
+
+<body>
+
+	<input name="c1" type="button" value="start class-1" onclick=classstart(this.name)></input><!--button to start class-1-->
+	<fieldset id="c1" style="display: none">	
+	<legend>Classroom:1</legend>
+		<form id="main-c1"></form> <!--HTML IS ADDED TO THIS WHEN CLASS-1 STARTS.-->>
+		<!--ALL THIS BELOW HTML CODE IS WANTEDLY COMMENTED. 
+			JUST FOR GRADING REFERENCE. 
+			ALL THE BELOW CODE IS BEING WRAPPED UP IN CLASS-START().  
+			I DID THIS TO ACHIEVE CODE REUSABILITY USING LOOPS.-->
+		<!-- 
+		<form>
+		<label>Student 1:</label>
+		<label>Do you have a mask: </label>
+		<input type="button" name="maskon" value="yes" onclick=maskfn(this.value)></input>
+		<input type="button" name="maskoff" value="no" onclick=maskfn(this.value)></input>
+		<label for="desk">Choose a desk:</label>
+		<select name="desk" id="desk" value=this.value onchange=deskfn(this.value)>
+			<option value="null">--</option>
+			<option value="one">desk1</option>
+			<option value="two">desk2</option>
+			<option value="three">desk3</option>
+			<option value="four">desk4</option>
+			<option value="five">desk5</option>
+		  </select>
+		<label>Lysol used: </label>
+		<input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input>
+		<input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)></input>
+		<input type="button" name="talk2" value="want to talk to instructor" onclick=talkfn(this.name)><span style="color:white;font-weight:bold" id="talk2pointer"><-</span></input>
+		<input type="button" id="talk2" value="go back to desk" onclick=gositfn(this.id)></input>
+
+
+		</form>
+		<form>
+		<label>Student 2:</label>
+		<label>Do you have a mask: </label>
+		<input type="button" name="maskon" value="yes" onclick=maskfn(this.value)></input>
+		<input type="button" name="maskoff" value="no" onclick=maskfn(this.value)></input>
+		<label for="desk">Choose a desk:</label>
+		<select name="desk" id="desk" value=this.value onchange=deskfn(this.value)>
+			<option value="null">--</option>
+			<option value="one">desk1</option>
+			<option value="two">desk2</option>
+			<option value="three">desk3</option>
+			<option value="four">desk4</option>
+			<option value="five">desk5</option>
+		  </select>
+		<label>Lysol used: </label>
+		<input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input>
+		<input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)></input>
+		<input type="button" name="talk2" value="want to talk to instructor" onclick=talkfn(this.name)><span style="color:white;font-weight:bold" id="talk2pointer"><-</span></input>
+		<input type="button" id="talk2" value="go back to desk" onclick=gositfn(this.id)></input>
+
+
+		</form>
+		
+		<form>
+		<label>Student 3:</label>
+		<label>Do you have a mask: </label>
+		<input type="button" name="maskon" value="yes" onclick=maskfn(this.value)></input>
+		<input type="button" name="maskoff" value="no" onclick=maskfn(this.value)></input>
+		<label for="desk">Choose a desk:</label>
+		<select name="desk" id="desk" value=this.value onchange=deskfn(this.value)>
+			<option value="null">--</option>
+			<option value="one">desk1</option>
+			<option value="two">desk2</option>
+			<option value="three">desk3</option>
+			<option value="four">desk4</option>
+			<option value="five">desk5</option>
+		  </select>
+		<label>Lysol used: </label>
+		<input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input>
+		<input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)></input>
+		<input type="button" name="talk3" value="want to talk to instructor" onclick=talkfn(this.name)><span style="color:white;font-weight:bold" id="talk3pointer"><-</span></input>
+		<input type="button" id="talk3" value="go back to desk" onclick=gositfn(this.id)></input>
+
+
+		</form>
+		
+		<form>
+		<label>Student 4:</label>
+		<label>Do you have a mask: </label>
+		<input type="button" name="maskon" value="yes" onclick=maskfn(this.value)></input>
+		<input type="button" name="maskoff" value="no" onclick=maskfn(this.value)></input>
+		<label for="desk">Choose a desk:</label>
+		<select name="desk" id="desk" value=this.value onchange=deskfn(this.value)>
+			<option value="null">--</option>
+			<option value="one">desk1</option>
+			<option value="two">desk2</option>
+			<option value="three">desk3</option>
+			<option value="four">desk4</option>
+			<option value="five">desk5</option>
+		  </select>
+		  
+		<label>Lysol used: </label>
+		<input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input>
+		<input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)></input>
+		<input type="button" name="talk4" value="want to talk to instructor" onclick=talkfn(this.name)><span style="color:white;font-weight:bold" id="talk4pointer"><-</span></input>
+		<input type="button" id="talk4" value="go back to desk" onclick=gositfn(this.id)></input>
+		</form>
+		
+		<form>
+		<label>Student 5:</label>
+		<label>Do you have a mask: </label>
+		<input type="button" name="maskon" value="yes" onclick=maskfn(this.value)></input>
+		<input type="button" name="maskoff" value="no" onclick=maskfn(this.value)></input>
+		<label for="desk">Choose a desk:</label>
+		<select name="desk" id="desk" value=this.value onchange=deskfn(this.value)>
+			<option value="null">--</option>
+			<option value="one">desk1</option>
+			<option value="two">desk2</option>
+			<option value="three">desk3</option>
+			<option value="four">desk4</option>
+			<option value="five">desk5</option>
+		  </select>
+		<label>Lysol used: </label>
+		<input type="button" name="lysolused" value="yes" onclick=lysolfn(this.value)></input>
+		<input type="button" name="lysolnotused" value="no" onclick=lysolfn(this.value)></input>
+		<input type="button" name="talk5" value="want to talk to instructor" onclick=talkfn(this.name)><span style="color:white;font-weight:bold" id="talk5pointer"><-</span></input>
+		<input type="button" id="talk5" value="go back to desk" onclick=gositfn(this.id)></input>
+
+		</form>-->
+
+		
+	<input name="c1" type="button" value="end class-1" onclick="classend(this.name); "></input>		<!--button to end class-1--> 
+	</fieldset>
+	<form id="c1-end" style="display: none">  <!--HTML IS ADDED TO THIS WHEN THE CLASS-1 ENDS. (HTML CODE IS WRAPPED UP IN CLASSEND())-->
+	</form>
+
+
+	<input name="c2" type="button" value="start class-2" onclick=classstart(this.name)></input><!--button to start class-2-->
+    <fieldset id="c2" style="display: none">	
+	<legend>Classroom:2</legend>
+		<form id="main-c2"></form> <!--HTML IS ADDED TO THIS WHEN CLASS-2 STARTS.-->>
+		<input name="c2" type="button" value="end class-2" onclick="classend(this.name); "></input> <!--button to end class-2--> 
+	</fieldset>
+	<form id="c2-end" style="display: none"> <!--HTML IS ADDED TO THIS WHEN THE CLASS-2 ENDS. (HTML CODE IS WRAPPED UP IN CLASSEND()-->
+	</form>
+
+
+
+	<input name="c3" type="button" value="start class-3" onclick=classstart(this.name)></input><!--button to start class-3--> 
+    <fieldset id="c3" style="display: none">	
+	<legend>Classroom:3</legend>
+		<form id="main-c3"></form> <!--HTML IS ADDED TO THIS WHEN CLASS-3 STARTS.-->>
+		<input name="c3" type="button" value="end class-3" onclick="classend(this.name); "></input> <!--button to end class-3--> 
+	</fieldset>
+	<form id="c3-end" style="display: none">  <!--HTML IS ADDED TO THIS WHEN THE CLASS-3 ENDS. (HTML CODE IS WRAPPED UP IN CLASSEND()-->
+	</form>
+	
+
+</body>
+</html>
